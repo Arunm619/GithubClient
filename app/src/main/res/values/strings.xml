@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">YAGC - DI</string>
+    <string name="nobrowserdescription">You don\'t have a browser</string>
+</resources>
