@@ -9,6 +9,7 @@ import io.arunbuilds.yagc_di.GithubApi.ReposApi
 import io.arunbuilds.yagc_di.Models.RepoModel
 import io.arunbuilds.yagc_di.R
 import io.arunbuilds.yagc_di.ReposAdapter
+import io.arunbuilds.yagc_di.Root.App
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,13 +53,11 @@ class HomeActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
-        //creating instance of that interface using retrofit
-        val reposApi = retrofit.create(ReposApi::class.java)
-        //getting list of repos as observable
-        val observableRepo : Observable<MutableList<RepoModel>> = reposApi.getRepoFromRemote()
+        val app = application as App
 
+        val githubApiService = app.getGithubApiService(gson,retrofit)
 
-        observableRepo.subscribeOn(Schedulers.io())
+        githubApiService.getRepofromRemote().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object  : Observer<MutableList<RepoModel>> {
                 override fun onComplete() {
