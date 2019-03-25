@@ -3,22 +3,15 @@ package io.arunbuilds.yagc_di.Home
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import io.arunbuilds.yagc_di.GithubApi.ReposApi
 import io.arunbuilds.yagc_di.Models.RepoModel
 import io.arunbuilds.yagc_di.R
 import io.arunbuilds.yagc_di.ReposAdapter
 import io.arunbuilds.yagc_di.Root.App
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeActivity : AppCompatActivity() {
 
@@ -40,22 +33,10 @@ class HomeActivity : AppCompatActivity() {
         rv_list.adapter = adapter
         rv_list.layoutManager = linearLayoutManager
 
-        //creating gson
-        val gson: Gson = GsonBuilder()
-            .setLenient()
-            .create()
-
-        //creating retrofit
-        val retrofit: Retrofit = Retrofit
-            .Builder()
-            .baseUrl("https://api.github.com/")
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
 
         val app = application as App
 
-        val githubApiService = app.getGithubApiService(gson,retrofit)
+        val githubApiService = app.getGithubApiService()
 
         githubApiService.getRepofromRemote().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
